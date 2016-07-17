@@ -3,7 +3,7 @@
 #import <UIKit/UIKit.h>
 
 
-@interface LMJDownloadOffLineTask : NSObject
+@interface NJDownloadOffLineTask : NSObject
 
 /** task对象本身, 需要手动开始任务*/
 + (instancetype)downloadTaskWithURL:(NSString *)URLStr progress:(void(^)(CGFloat progress))progress complete:(void(^)(NSError *error, NSString *filePath))complete;

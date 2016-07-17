@@ -1,12 +1,6 @@
-//
-//  LMJDownloadOffLineTask.m
-//  download封装
-//
-//  Created by apple on 16/7/12.
-//  Copyright © 2016年 alan. All rights reserved.
-//
 
-#import "LMJDownloadOffLineTask.h"
+
+#import "NJDownloadOffLineTask.h"
 #import "NSString+Hash.h"
 
 #define LMJTaskURL [NSURL URLWithString:_taskURL_String]
@@ -15,12 +9,12 @@
 
 #define LMJFilePath ([NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES).lastObject stringByAppendingPathComponent:LMJFileName])
 
-#define LMJContentLengthDataDictPath ([NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES).lastObject stringByAppendingPathComponent:(@"LMJ_CONTENT_DATA_CACHES_PLISTFILE_NAME".md5String)])
+#define LMJContentLengthDataDictPath ([NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES).lastObject stringByAppendingPathComponent:(@"NJ_CONTENT_DATA_CACHES_PLISTFILE_NAME".md5String)])
 
 #define LMJFileCompleteLength [[[NSFileManager defaultManager] attributesOfItemAtPath:LMJFilePath error:nil][NSFileSize] integerValue]
 
 
-@interface LMJDownloadOffLineTask ()<NSURLSessionDataDelegate>
+@interface NJDownloadOffLineTask ()<NSURLSessionDataDelegate>
 /** session任务集合 */
 @property (nonatomic, strong) NSURLSession *session;
 
@@ -44,14 +38,19 @@
 
 @end
 
-@implementation LMJDownloadOffLineTask
+@implementation NJDownloadOffLineTask
 
 
 - (NSURLSession *)session
 {
     if(_session == nil)
     {
-        _session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration] delegate:self delegateQueue:[[NSOperationQueue alloc] init]];
+        NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
+        
+        configuration.timeoutIntervalForRequest = 18.0;
+        configuration.allowsCellularAccess = NO;
+        
+        _session = [NSURLSession sessionWithConfiguration:configuration delegate:self delegateQueue:[[NSOperationQueue alloc] init]];
     }
     return _session;
 }
@@ -165,7 +164,7 @@
 
 + (instancetype)downloadTaskWithURL:(NSString *)URLStr progress:(void(^)(CGFloat progress))progress complete:(void(^)(NSError *error, NSString *filePath))complete
 {
-    LMJDownloadOffLineTask *task = [[self alloc] init];
+    NJDownloadOffLineTask *task = [[self alloc] init];
     
     task.taskURL_String = URLStr;
     
