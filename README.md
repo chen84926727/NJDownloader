@@ -1,4 +1,4 @@
-# NXDownloader
+# NJDownloader
 
 - 0, 创建下载任务
 
